@@ -2,11 +2,11 @@ package faloota
 
 import (
 	"context"
-	"errors"
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
 	"github.com/gadelkareem/cachita"
+	"github.com/pkg/errors"
 	"net/http"
 	"sync"
 	"time"
