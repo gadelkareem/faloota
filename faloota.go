@@ -108,7 +108,7 @@ func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Contex
 			chromedp.Flag("no-default-browser-check", true),
 			chromedp.Flag("no-first-run", true),
 			chromedp.Flag("disable-fre", true),
-			chromedp.Flag("enable-native-notifications", false),
+			chromedp.Flag("disable-notifications", true),
 			chromedp.Flag("window-position", "-999999,-999999"),
 			chromedp.Flag("window-size", "5,5"),
 			chromedp.Flag("user-agent", userAgent),
