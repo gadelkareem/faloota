@@ -9,23 +9,27 @@ import (
 	"github.com/gadelkareem/go-helpers"
 	"github.com/pkg/errors"
 	"net/http"
+	"regexp"
+	"strings"
 	"sync"
 	"time"
 )
 
 type Faloota struct {
 	*sync.Mutex
-	cache   cachita.Cache
-	cancels map[string]context.CancelFunc
-	ctxes   map[string]context.Context
+	cache          cachita.Cache
+	cancels        map[string]context.CancelFunc
+	ctxes          map[string]context.Context
+	proxyAuthRegex *regexp.Regexp
 }
 
 func NewFaloota() (f *Faloota, err error) {
 	f = &Faloota{
-		Mutex:   &sync.Mutex{},
-		cache:   cachita.NewMemoryCache(1*time.Hour, 1*time.Hour),
-		ctxes:   make(map[string]context.Context),
-		cancels: make(map[string]context.CancelFunc),
+		Mutex:          &sync.Mutex{},
+		cache:          cachita.NewMemoryCache(1*time.Hour, 1*time.Hour),
+		ctxes:          make(map[string]context.Context),
+		cancels:        make(map[string]context.CancelFunc),
+		proxyAuthRegex: regexp.MustCompile(`[^/:]+:[^/:@]+@`),
 	}
 	_, err = f.Ctx("", "")
 	f.Cancel("", "")
@@ -96,6 +100,11 @@ func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Contex
 
 	if ctx, ok := f.ctxes[k]; ok {
 		return ctx, nil
+	}
+
+	if strings.Contains(proxy, "@") {
+		// No proxy auth support https://bugs.chromium.org/p/chromium/issues/detail?id=615947
+		proxy = f.proxyAuthRegex.ReplaceAllString(proxy, "")
 	}
 
 	f.ctxes[k], f.cancels[k] = chromedp.NewAllocator(
