@@ -111,7 +111,7 @@ func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Contex
 		chromedp.NoFirstRun,
 		chromedp.UserAgent(userAgent),
 		chromedp.ProxyServer(proxy),
-		chromedp.WindowSize(5, 5),
+		//chromedp.WindowSize(5, 5),
 		chromedp.Flag("disable-3d-apis", true),
 		chromedp.Flag("disable-fre", true),
 		chromedp.Flag("disable-notifications", true),
