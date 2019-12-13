@@ -2,16 +2,17 @@ package faloota
 
 import (
 	"context"
-	"github.com/chromedp/cdproto/network"
-	"github.com/chromedp/chromedp"
-	"github.com/gadelkareem/cachita"
-	"github.com/gadelkareem/go-helpers"
-	"github.com/pkg/errors"
 	"net/http"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/chromedp/cdproto/network"
+	"github.com/chromedp/chromedp"
+	"github.com/gadelkareem/cachita"
+	h "github.com/gadelkareem/go-helpers"
+	"github.com/pkg/errors"
 )
 
 type Faloota struct {
@@ -46,6 +47,9 @@ func (f *Faloota) BypassOnce(inUrl, proxy, userAgent string, verify Action) (coo
 func (f *Faloota) Bypass(inUrl, proxy, userAgent string, verify Action, id ...string) (cookies []*http.Cookie, err error) {
 	cacheKey := key(inUrl, proxy, userAgent)
 	err = f.cache.Get(cacheKey, &cookies)
+	if err != nil {
+		return nil, err
+	}
 	if len(cookies) > 0 {
 		return cookies, nil
 	}
@@ -141,7 +145,7 @@ func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Contex
 		chromedp.Flag("use-mock-keychain", true),
 	}
 	if !f.DisableHeadless {
-		opts = append(opts, chromedp.Headless, )
+		opts = append(opts, chromedp.Headless)
 	}
 	ctx, _ = chromedp.NewExecAllocator(
 		context.Background(),
