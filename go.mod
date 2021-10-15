@@ -3,8 +3,8 @@ module github.com/gadelkareem/faloota
 go 1.13
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20191027233732-553aa270fe0a
-	github.com/chromedp/chromedp v0.5.1
+	github.com/chromedp/cdproto v0.0.0-20210713064928-7d28b402946a
+	github.com/chromedp/chromedp v0.7.4
 	github.com/gadelkareem/cachita v0.0.0-20190120182126-27c05434ad48
 	github.com/gadelkareem/go-helpers v0.0.0-20191028141354-37da31be3be9
 	github.com/golang/protobuf v1.3.2 // indirect
@@ -12,7 +12,6 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	golang.org/x/net v0.0.0-20191028085509-fe3aa8a45271 // indirect
-	golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c // indirect
 	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 )
