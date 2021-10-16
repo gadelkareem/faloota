@@ -38,13 +38,12 @@ func NewFaloota() (f *Faloota, err error) {
 }
 
 func (f *Faloota) BypassOnce(inUrl, proxy, userAgent string, verify Action) (cookies []*http.Cookie, err error) {
-    id := h.RandomString(5)
-    cookies, err = f.Bypass(inUrl, proxy, userAgent, verify, id)
-    f.Cancel(proxy, userAgent, id)
+    cookies, err = f.Bypass(inUrl, proxy, userAgent, verify)
+    f.Cancel(proxy, userAgent)
     return
 }
 
-func (f *Faloota) Bypass(inUrl, proxy, userAgent string, verify Action, id ...string) (cookies []*http.Cookie, err error) {
+func (f *Faloota) Bypass(inUrl, proxy, userAgent string, verify Action) (cookies []*http.Cookie, err error) {
     cacheKey := key(inUrl, proxy, userAgent)
     err = f.cache.Get(cacheKey, &cookies)
     if err != nil && !cachita.IsErrorOk(err) {
@@ -54,7 +53,7 @@ func (f *Faloota) Bypass(inUrl, proxy, userAgent string, verify Action, id ...st
         return cookies, nil
     }
 
-    ctx, err := f.Ctx(proxy, userAgent, id...)
+    ctx, err := f.Ctx(proxy, userAgent)
     if err != nil {
         return nil, err
     }
@@ -100,7 +99,7 @@ func (f *Faloota) Bypass(inUrl, proxy, userAgent string, verify Action, id ...st
 func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Context, err error) {
     f.Lock()
     defer f.Unlock()
-    k := key(proxy, userAgent, id...)
+    k := key(proxy, userAgent)
 
     if ctx, ok := f.ctxes[k]; ok {
         return ctx, nil
@@ -178,10 +177,10 @@ func (f *Faloota) Close() {
     f.Wait()
 }
 
-func (f *Faloota) Cancel(proxy, useragent string, id ...string) {
+func (f *Faloota) Cancel(proxy, useragent string) {
     f.Lock()
     defer f.Unlock()
-    k := key(proxy, useragent, id...)
+    k := key(proxy, useragent)
     if cancel, ok := f.cancels[k]; ok {
         cancel()
         delete(f.ctxes, k)
@@ -189,8 +188,8 @@ func (f *Faloota) Cancel(proxy, useragent string, id ...string) {
     }
 }
 
-func key(proxy, userAgent string, id ...string) string {
-    return cachita.Id(proxy, userAgent, cachita.Id(id...))
+func key(k ...string) string {
+    return cachita.Id(k...)
 }
 
 type Action interface {
