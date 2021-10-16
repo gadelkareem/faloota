@@ -142,6 +142,7 @@ func (f *Faloota) Ctx(proxy, userAgent string, id ...string) (ctx context.Contex
         chromedp.Flag("metrics-recording-only", true),
         chromedp.Flag("safebrowsing-disable-auto-update", true),
         chromedp.Flag("enable-automation", true),
+        chromedp.Flag("disable-blink-features", "AutomationControlled"),
         chromedp.Flag("password-store", "basic"),
         chromedp.Flag("use-mock-keychain", true),
     }
